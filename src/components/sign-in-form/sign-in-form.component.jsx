@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import FormInput from '../form-input/form-input.component';
 import './sign-in-form.styles.scss';
 import { getRedirectResult } from 'firebase/auth';
 import { auth, signInAuthUserWithEmailAndPassword, createUserDocumentFromAuth, signInWithGoogleRedirect } from '../../utils/firebase/firebase.utils';
 import Button from '../button/button.component';
+import { UserContext } from '../../contexts/user.context';
 
 const defaultformFields = {
     email: '',
@@ -14,6 +15,8 @@ const SignInForm = () => {
 
     const [formFields, setFormFields] = useState(defaultformFields);
     const { email, password } = formFields;
+
+    const { setCurrentUser } = useContext(UserContext);
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -29,7 +32,7 @@ const SignInForm = () => {
             const response = await getRedirectResult(auth);
             if(response) {
                 const userDocRef = await createUserDocumentFromAuth(response.user);
-                console.log(userDocRef);
+                // console.log(userDocRef);
             }
         }
 
@@ -40,11 +43,12 @@ const SignInForm = () => {
         event.preventDefault();
 
         try {
-            await signInAuthUserWithEmailAndPassword(email, password);
+            const { user } = await signInAuthUserWithEmailAndPassword(email, password);
+            setCurrentUser(user);
             resetFormFields();
         } catch(error) {
             switch(error.code) {
-                case 'auth/wrong-password':
+                case 'auth/invalid-credential':
                     alert('Incorrect email or password');
                     break;
                 case 'auth/user-not-found':
