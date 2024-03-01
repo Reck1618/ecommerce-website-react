@@ -4,6 +4,8 @@ import './navigation.styles.scss';
 import { ReactComponent as CrownLogo } from '../../assets/crown.svg';
 import { UserContext } from '../../contexts/user.context';
 import { userSignOut } from '../../utils/firebase/firebase.utils';
+import CartIcon from '../../components/cart-icon/cart-icon.component';
+import CartDropdown from '../../components/cart-dropdown/cart-dropdown.component';
 
 const Navigation = () => {
     const { currentUser } = useContext(UserContext);
@@ -17,7 +19,9 @@ const Navigation = () => {
                 <div className='nav-links-container'>
                     <Link className="nav-link" to='/shop'>Shop</Link>
                     { currentUser ? <span className="nav-link" onClick={ userSignOut }>Sign-Out</span> : <Link className="nav-link" to='/sign-in'>Sign-In</Link> }
+                    <CartIcon />
                 </div>
+                <CartDropdown />
             </div>
             <Outlet />
         </Fragment>
