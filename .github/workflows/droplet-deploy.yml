@@ -26,7 +26,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
-          source: ./dist/
+          source: ./build/
           target: /var/www/ecom
 
       - name: Restart Nginx
